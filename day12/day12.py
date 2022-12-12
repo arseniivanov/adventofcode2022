@@ -1,12 +1,12 @@
 from collections import deque
 
-def find_shortest_path(grid):
+def find_shortest_path(grid, start_tile):
     starts = []
     end = None
     # find start and end positions
     for i in range(len(grid)):
         for j in range(len(grid[i])):
-            if grid[i][j] <= 0:
+            if grid[i][j] <= start_tile:
                 starts.append((i, j))
             elif grid[i][j] == 26:
                 end = (i, j)
@@ -58,6 +58,8 @@ mtx = []
 for row in data:
     mtx.append(convert(row))
 
-p = find_shortest_path(mtx)
+p = find_shortest_path(mtx, -1)
+print(p-1)
+p = find_shortest_path(mtx, 0)
 print(p-1)
 
