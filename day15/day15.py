@@ -7,8 +7,7 @@ data = [int(d) for row in data for d in re.findall(r'-?\d+', row)]
 data = np.array_split(data, int(len(data)/4))
 
 dct = {}
-beacons = ()
-y = 4000000
+y = 2000000
 
 taken_idxes = set()
 
@@ -29,4 +28,23 @@ for k, v in dct.items():
 
 print(len(locs-taken_idxes))
 
+def solve(dct, y):
+    ranges = []
+    for k, v in dct.items():
+        y_dist = abs(y - k[1])
+        limit = max(v - y_dist, 0)
+        ranges.append((k[0] - limit, k[0] + limit))
+    ranges.sort()
+    prev_x2 = ranges[0][1]
+    for x1, x2 in ranges[1:]:
+        if x1 > prev_x2:
+            return prev_x2 + 1
+        prev_x2 = max(x2, prev_x2)
+    return False
 
+def solve_2(dct):
+    for y in range(4_000_000):
+        if x := solve(dct, y):
+            return x * 4_000_000 + y
+
+print(solve_2(dct))
