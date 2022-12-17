@@ -3,7 +3,7 @@ import re
 from collections import defaultdict
 import itertools
 
-data = open("sample").read().split('\n')[:-1]
+data = open("input").read().split('\n')[:-1]
 data = [re.findall(r'[A-Z]{2}|\d+', row) for row in data]
 data = [[int(x) if x.isdigit() else x for x in row] for row in data]
 
@@ -21,17 +21,22 @@ for d in data:
 for k, i, j in itertools.product(nodes, nodes, nodes):
     dist_map[i,j] = min(dist_map[i,j], dist_map[i,k] + dist_map[k,j])
 
-timer = 30
-start = "AA"
-
-def findmax(timer, curr, value_keys, dist_map, value_map):
+def findmax(timer, curr, value_keys, dist_map, value_map, e):
     max_value = 0
     for v in value_keys:
         if dist_map[curr,v] < timer:
-            value = value_map[v] * (timer-dist_map[curr,v]-1) + findmax(timer-dist_map[curr,v]-1, v, value_keys-{v}, dist_map, value_map)
+            value = value_map[v] * (timer-dist_map[curr,v]-1) + findmax(timer-dist_map[curr,v]-1, v, value_keys-{v}, dist_map, value_map, e)
             max_value = max(max_value, value)
+    if e:
+        value_elephant = findmax(26, curr, value_keys, dist_map, value_map, False)
+        max_value = max(max_value, value_elephant)
     return max_value
 
-print(findmax(timer, start, set(value_map), dist_map, value_map))
+timer = 30
+start = "AA"
+print(findmax(timer, start, set(value_map), dist_map, value_map, False))
+timer = 26
+print(findmax(timer, start, set(value_map), dist_map, value_map, True))
+
 
 
