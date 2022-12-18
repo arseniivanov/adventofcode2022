@@ -23,17 +23,8 @@ def simulate_rock_fall(rocks, input_str, num_rocks, hole_width, hole_depth):
     input_index = 0
     for h in range(num_rocks):
         rightbound = find_rightmost_nonzero(rocks[rock_index].sum(axis=0))
-        current_x = hole_depth - 3
+        current_x = hole_depth - 4
         current_y = 2
-        c = input_str[input_index]
-        if c == '>' and current_y+rightbound+1 < hole_width:
-            if not ((hole[current_x-4:current_x,current_y+rightbound+1] + rocks[rock_index][:,rightbound]) > 1 ).any():
-                current_y += 1
-        elif c == '<' and current_y > 0:
-            if not((hole[current_x-4:current_x, current_y-1] + rocks[rock_index][:,0]) > 1 ).any():
-                current_y -= 1
-        print("1st Wind blew: {}, current_x = {}, current_y = {}, index = {}".format(c, current_x, current_y, input_index))
-        input_index = (input_index + 1) % len(input_str)
         while not hole[current_x, current_y:current_y+rightbound+1].any():
             current_x += 1
             print("Rock falls, current_x:", current_x)
